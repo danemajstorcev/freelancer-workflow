@@ -16,21 +16,17 @@ const List = styled.div`
 `;
 
 const ProjectCard = styled(Card)`
-  padding: 1.125rem 1.25rem;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: center;
+  padding: 1rem 1.125rem;
   transition: box-shadow 0.15s;
   &:hover { box-shadow: ${({ theme }) => theme.shadowMd}; }
-
-  @media (max-width: 700px) { grid-template-columns: 1fr; }
 `;
 
-const ProjectName = styled.div`
-  font-size: 0.92rem;
-  font-weight: 700;
-  margin-bottom: 4px;
+const CardTop = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 `;
 
 const Meta = styled.div`
@@ -46,27 +42,43 @@ const MetaItem = styled.span`
   color: ${({ theme }) => theme.textMuted};
 `;
 
-const RightSide = styled.div`
+const BadgeRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+`;
+
+const ActionRow = styled.div`
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid ${({ theme }) => theme.border};
+`;
+
+const WarnBanner = styled.div`
+  font-size: 0.82rem;
+  color: ${({ theme }) => theme.warning};
+  margin-bottom: 1rem;
+  padding: 10px 14px;
+  background: ${({ theme }) => theme.warningLight};
+  border-radius: ${({ theme }) => theme.radiusSm};
 `;
 
 export default function ProjectsPage() {
   const { state, dispatch } = useApp();
   const theme               = useStyledTheme() as AppTheme;
 
-  const [showNew,    setShowNew]    = useState(false);
-  const [editProject, setEditProject] = useState<Project | null>(null);
+  const [showNew,      setShowNew]      = useState(false);
+  const [editProject,  setEditProject]  = useState<Project | null>(null);
 
   return (
     <PageInner>
       <PageHeader>
         <div>
           <PageTitle>Projects</PageTitle>
-          <PageSub>{state.projects.length} project{state.projects.length !== 1 ? 's' : ''} total</PageSub>
+          <PageSub>{state.projects.length} project{state.projects.length !== 1 ? 's' : ''}</PageSub>
         </div>
         <Button onClick={() => setShowNew(true)} disabled={state.clients.length === 0}>
           + New Project
@@ -74,9 +86,7 @@ export default function ProjectsPage() {
       </PageHeader>
 
       {state.clients.length === 0 && (
-        <div style={{ fontSize: '0.82rem', color: theme.warning, marginBottom: '1rem', padding: '10px 14px', background: theme.warningLight, borderRadius: theme.radiusSm }}>
-          Add at least one client before creating a project.
-        </div>
+        <WarnBanner>Add at least one client before creating a project.</WarnBanner>
       )}
 
       {state.projects.length === 0 ? (
@@ -96,30 +106,31 @@ export default function ProjectsPage() {
 
             return (
               <ProjectCard key={project.id}>
-                <div>
-                  <ProjectName>{project.name}</ProjectName>
-                  <div style={{ fontSize: '0.78rem', color: theme.textSub }}>{client?.name ?? 'No client'} — {client?.company}</div>
-                  {project.description && (
-                    <div style={{ fontSize: '0.78rem', color: theme.textMuted, marginTop: '4px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>
-                      {project.description}
+                <CardTop>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.92rem', marginBottom: '2px' }}>{project.name}</div>
+                    <div style={{ fontSize: '0.76rem', color: theme.textSub }}>
+                      {client?.name ?? 'No client'}{client?.company ? ` — ${client.company}` : ''}
                     </div>
-                  )}
-                  <Meta>
-                    <MetaItem>📅 {formatDate(project.deadline)}</MetaItem>
-                    <MetaItem>💰 {formatCurrency(project.budget)}</MetaItem>
-                    {taskCount > 0 && <MetaItem>✓ {doneTasks}/{taskCount} tasks</MetaItem>}
-                  </Meta>
-                </div>
+                    <Meta>
+                      {project.deadline && <MetaItem>📅 {formatDate(project.deadline)}</MetaItem>}
+                      <MetaItem>💰 {formatCurrency(project.budget)}</MetaItem>
+                      {taskCount > 0 && <MetaItem>✓ {doneTasks}/{taskCount} tasks</MetaItem>}
+                    </Meta>
+                  </div>
+                  <BadgeRow>
+                    <Badge color={sColors.color} bg={sColors.bg}>{project.status}</Badge>
+                    <Badge color={pColors.color} bg={pColors.bg}>{project.priority}</Badge>
+                  </BadgeRow>
+                </CardTop>
 
-                <RightSide>
-                  <Badge color={sColors.color} bg={sColors.bg}>{project.status}</Badge>
-                  <Badge color={pColors.color} bg={pColors.bg}>{project.priority}</Badge>
-                  <Button variant="ghost" size="sm" onClick={() => setEditProject(project)}>✎ Edit</Button>
+                <ActionRow>
+                  <Button variant="ghost" size="sm" style={{ flex: 1 }} onClick={() => setEditProject(project)}>✎ Edit</Button>
                   <Button variant="danger" size="sm" onClick={() => {
                     if (confirm(`Delete "${project.name}"?`))
                       dispatch({ type: 'DELETE_PROJECT', payload: project.id });
-                  }}>✕</Button>
-                </RightSide>
+                  }}>✕ Delete</Button>
+                </ActionRow>
               </ProjectCard>
             );
           })}

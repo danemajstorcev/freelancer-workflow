@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 
+// ── Button ─────────────────────────────────────────────────
 
 interface ButtonProps {
   variant?: 'primary' | 'ghost' | 'danger';
@@ -9,6 +10,7 @@ interface ButtonProps {
 export const Button = styled.button<ButtonProps>`
   display: inline-flex;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   gap: 6px;
   font-weight: 600;
   border-radius: ${({ theme }) => theme.radiusSm};
@@ -45,12 +47,14 @@ export const Button = styled.button<ButtonProps>`
   }}
 `;
 
+// ── Badge ──────────────────────────────────────────────────
 
 interface BadgeProps { color?: string; bg?: string; }
 
 export const Badge = styled.span<BadgeProps>`
   display: inline-flex;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -60,6 +64,7 @@ export const Badge = styled.span<BadgeProps>`
   background: ${({ bg,    theme }) => bg    ?? theme.accentLight};
 `;
 
+// ── Status Badge helpers ────────────────────────────────────
 
 export function clientStatusColor(status: string, theme: any): { color: string; bg: string } {
   const map: Record<string, { color: string; bg: string }> = {
@@ -91,6 +96,7 @@ export function priorityColor(priority: string, theme: any): { color: string; bg
   return map[priority] ?? { color: theme.textSub, bg: theme.bgTag };
 }
 
+// ── Avatar ─────────────────────────────────────────────────
 
 interface AvatarProps { bg: string; size?: number; }
 
@@ -104,11 +110,13 @@ export const Avatar = styled.div<AvatarProps>`
   font-size: ${({ size = 36 }) => size * 0.38}px;
   display: flex;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   justify-content: center;
   flex-shrink: 0;
   letter-spacing: 0.02em;
 `;
 
+// ── Card ───────────────────────────────────────────────────
 
 export const Card = styled.div`
   background:    ${({ theme }) => theme.bgCard};
@@ -117,6 +125,7 @@ export const Card = styled.div`
   box-shadow:    ${({ theme }) => theme.shadow};
 `;
 
+// ── Modal ──────────────────────────────────────────────────
 
 export const Overlay = styled.div`
   position: fixed;
@@ -126,6 +135,7 @@ export const Overlay = styled.div`
   z-index: 200;
   display: flex;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   justify-content: center;
   padding: 1rem;
   animation: fadeIn 0.15s ease;
@@ -139,6 +149,12 @@ export const ModalBox = styled.div`
   box-shadow:    ${({ theme }) => theme.shadowLg};
   width: 100%;
   max-width: 540px;
+  @media (max-width: 600px) {
+    max-width: 100%;
+    max-height: 92vh;
+    margin-top: auto;
+    border-radius: 16px 16px 0 0;
+  }
   max-height: 90vh;
   overflow-y: auto;
   animation: slideUp 0.2s cubic-bezier(.16,1,.3,1);
@@ -148,6 +164,7 @@ export const ModalBox = styled.div`
 export const ModalHeader = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.border};
@@ -170,6 +187,7 @@ export const ModalFooter = styled.div`
   border-top: 1px solid ${({ theme }) => theme.border};
 `;
 
+// ── Form fields ────────────────────────────────────────────
 
 export const Field = styled.div`
   display: flex;
@@ -224,14 +242,17 @@ export const Select = styled.select`
 export const FieldRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
   gap: 0.75rem;
 `;
 
+// ── Empty state ────────────────────────────────────────────
 
 export const EmptyState = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   justify-content: center;
   gap: 0.75rem;
   padding: 3rem 1.5rem;
@@ -243,6 +264,7 @@ export const EmptyState = styled.div`
   .sub   { font-size: 0.78rem; max-width: 240px; line-height: 1.6; }
 `;
 
+// ── Icon button ────────────────────────────────────────────
 
 export const IconBtn = styled.button`
   background: none;
@@ -250,6 +272,7 @@ export const IconBtn = styled.button`
   color: ${({ theme }) => theme.textMuted};
   display: flex;
   align-items: center;
+  @media (max-width: 600px) { align-items: flex-end; padding: 0; }
   justify-content: center;
   padding: 4px;
   border-radius: ${({ theme }) => theme.radiusSm};

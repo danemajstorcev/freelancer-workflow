@@ -9,6 +9,8 @@ export const PageContent = styled.main`
   flex: 1;
   overflow-y: auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const PageHeader = styled.div`
@@ -16,14 +18,21 @@ export const PageHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const PageTitle = styled.h1`
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+
+  @media (max-width: 480px) { font-size: 1.15rem; }
 `;
 
 export const PageSub = styled.p`
@@ -35,4 +44,9 @@ export const PageSub = styled.p`
 export const PageInner = styled.div`
   padding: 1.75rem 2rem;
   max-width: 1200px;
+  width: 100%;
+
+  @media (max-width: 1024px) { padding: 1.5rem 1.5rem; }
+  @media (max-width: 768px)  { padding: 1.25rem 1rem;  }
+  @media (max-width: 480px)  { padding: 1rem 0.875rem; }
 `;

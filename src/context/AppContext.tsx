@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import type { AppState, AppAction, Client, Project, Task } from '../types';
 
+// ── Seed data so the app looks good on first load ──────────
 
 const SEED: AppState = {
   clients: [
@@ -24,6 +25,7 @@ const SEED: AppState = {
   ],
 };
 
+// ── Reducer ────────────────────────────────────────────────
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -61,6 +63,7 @@ function loadState(): AppState {
   } catch { return SEED; }
 }
 
+// ── Context ────────────────────────────────────────────────
 
 interface AppContextValue {
   state:    AppState;

@@ -13,31 +13,35 @@ const StatsGrid = styled.div`
   gap: 1rem;
   margin-bottom: 1.75rem;
 
-  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 900px)  { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 400px)  { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
 `;
 
 const StatCard = styled(Card)`
-  padding: 1.25rem 1.5rem;
+  padding: 1.1rem 1.25rem;
+  @media (max-width: 480px) { padding: 0.9rem 1rem; }
 `;
 
 const StatValue = styled.div`
-  font-size: 1.9rem;
+  font-size: 1.7rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
   margin-bottom: 4px;
+
+  @media (max-width: 480px) { font-size: 1.35rem; }
 `;
 
 const StatLabel = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: ${({ theme }) => theme.textSub};
   font-weight: 500;
 `;
 
 const StatDelta = styled.div<{ positive?: boolean }>`
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: ${({ positive, theme }) => positive ? theme.success : theme.textMuted};
-  margin-top: 6px;
+  margin-top: 5px;
   font-weight: 500;
 `;
 
@@ -45,11 +49,13 @@ const TwoCol = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  @media (max-width: 900px) { grid-template-columns: 1fr; }
+
+  @media (max-width: 768px)  { grid-template-columns: 1fr; }
 `;
 
 const SectionCard = styled(Card)`
   padding: 1.25rem;
+  overflow: hidden;
 `;
 
 const SectionTitle = styled.div`
@@ -60,25 +66,23 @@ const SectionTitle = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  a { font-size: 0.72rem; color: ${({ theme }) => theme.accent}; font-weight: 500; cursor: pointer; }
+  a {
+    font-size: 0.72rem;
+    color: ${({ theme }) => theme.accent};
+    font-weight: 500;
+    cursor: pointer;
+  }
 `;
 
-const ClientRow = styled.div`
+const Row = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 0;
+  padding: 7px 0;
   border-bottom: 1px solid ${({ theme }) => theme.borderLight};
   &:last-child { border-bottom: none; }
-`;
 
-const TaskRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid ${({ theme }) => theme.borderLight};
-  &:last-child { border-bottom: none; }
+  @media (max-width: 400px) { gap: 7px; }
 `;
 
 export default function Dashboard() {
@@ -107,26 +111,18 @@ export default function Dashboard() {
       </PageHeader>
 
       <StatsGrid>
-        <StatCard>
-          <StatLabel>Total Pipeline</StatLabel>
-          <StatValue>{formatCurrency(totalValue)}</StatValue>
-          <StatDelta positive>{state.clients.length} clients total</StatDelta>
-        </StatCard>
-        <StatCard>
-          <StatLabel>Closed Revenue</StatLabel>
-          <StatValue>{formatCurrency(closedValue)}</StatValue>
-          <StatDelta positive>{state.clients.filter((c) => c.status === 'Closed').length} deals won</StatDelta>
-        </StatCard>
-        <StatCard>
-          <StatLabel>Active Projects</StatLabel>
-          <StatValue>{activeProj}</StatValue>
-          <StatDelta>{state.projects.length} total projects</StatDelta>
-        </StatCard>
-        <StatCard>
-          <StatLabel>Open Tasks</StatLabel>
-          <StatValue>{pendingTasks}</StatValue>
-          <StatDelta>{state.tasks.filter((t) => t.status === 'Done').length} completed</StatDelta>
-        </StatCard>
+        {[
+          { label: 'Total Pipeline',  value: formatCurrency(totalValue),  delta: `${state.clients.length} clients`,    positive: true },
+          { label: 'Closed Revenue',  value: formatCurrency(closedValue), delta: `${state.clients.filter(c=>c.status==='Closed').length} deals won`, positive: true },
+          { label: 'Active Projects', value: String(activeProj),          delta: `${state.projects.length} total`,     positive: false },
+          { label: 'Open Tasks',      value: String(pendingTasks),        delta: `${state.tasks.filter(t=>t.status==='Done').length} done`, positive: false },
+        ].map(({ label, value, delta, positive }) => (
+          <StatCard key={label}>
+            <StatLabel>{label}</StatLabel>
+            <StatValue>{value}</StatValue>
+            <StatDelta positive={positive}>{delta}</StatDelta>
+          </StatCard>
+        ))}
       </StatsGrid>
 
       <TwoCol>
@@ -140,15 +136,14 @@ export default function Dashboard() {
             : recentClients.map((c) => {
                 const colors = clientStatusColor(c.status, theme);
                 return (
-                  <ClientRow key={c.id}>
-                    <Avatar bg={c.avatarColor} size={32}>{initials(c.name)}</Avatar>
+                  <Row key={c.id}>
+                    <Avatar bg={c.avatarColor} size={30}>{initials(c.name)}</Avatar>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '0.83rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</div>
-                      <div style={{ fontSize: '0.72rem', color: theme.textMuted }}>{c.company}</div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</div>
+                      <div style={{ fontSize: '0.7rem', color: theme.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.company}</div>
                     </div>
-                    <Badge color={colors.color} bg={colors.bg}>{c.status}</Badge>
-                    <div style={{ fontSize: '0.78rem', fontWeight: 600, minWidth: '60px', textAlign: 'right' }}>{formatCurrency(c.value)}</div>
-                  </ClientRow>
+                    <Badge color={colors.color} bg={colors.bg} style={{ fontSize: '0.6rem', flexShrink: 0 }}>{c.status}</Badge>
+                  </Row>
                 );
               })
           }
@@ -165,13 +160,13 @@ export default function Dashboard() {
                 const proj   = state.projects.find((p) => p.id === t.projectId);
                 const pColor = priorityColor(t.priority, theme);
                 return (
-                  <TaskRow key={t.id}>
+                  <Row key={t.id}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '0.83rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.title}</div>
-                      <div style={{ fontSize: '0.72rem', color: theme.textMuted }}>{proj?.name ?? '—'} · Due {formatDate(t.dueDate)}</div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.title}</div>
+                      <div style={{ fontSize: '0.7rem', color: theme.textMuted }}>{proj?.name ?? '—'} · {formatDate(t.dueDate)}</div>
                     </div>
-                    <Badge color={pColor.color} bg={pColor.bg}>{t.priority}</Badge>
-                  </TaskRow>
+                    <Badge color={pColor.color} bg={pColor.bg} style={{ fontSize: '0.6rem', flexShrink: 0 }}>{t.priority}</Badge>
+                  </Row>
                 );
               })
           }
