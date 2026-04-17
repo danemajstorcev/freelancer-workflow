@@ -1,20 +1,18 @@
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
-import { useApp } from '../../context/AppContext';
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
+import { useTheme } from "../../context/ThemeContext";
+import { useApp } from "../../context/AppContext";
 
-// ── Breakpoints ────────────────────────────────────────────
-const MOBILE  = '768px';
-const TABLET  = '1024px';
+const MOBILE = "768px";
+const TABLET = "1024px";
 
-// ── Overlay backdrop (mobile only) ────────────────────────
 const Backdrop = styled.div<{ open: boolean }>`
   display: none;
   @media (max-width: ${MOBILE}) {
-    display: ${({ open }) => open ? 'block' : 'none'};
+    display: ${({ open }) => (open ? "block" : "none")};
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
     z-index: 99;
   }
@@ -31,20 +29,20 @@ const SidebarWrap = styled.aside<{ open: boolean }>`
   position: sticky;
   top: 0;
   z-index: 100;
-  transition: transform 0.25s cubic-bezier(.16,1,.3,1);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Tablet: icon + label, slightly narrower */
   @media (max-width: ${TABLET}) {
     width: 200px;
   }
 
-  /* Mobile: full-screen overlay drawer */
   @media (max-width: ${MOBILE}) {
     position: fixed;
-    top: 0; left: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
     width: 240px;
-    transform: ${({ open }) => open ? 'translateX(0)' : 'translateX(-100%)'};
-    box-shadow: ${({ open }) => open ? '4px 0 24px rgba(0,0,0,0.3)' : 'none'};
+    transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
+    box-shadow: ${({ open }) => (open ? "4px 0 24px rgba(0,0,0,0.3)" : "none")};
   }
 `;
 
@@ -55,10 +53,28 @@ const Logo = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  .brand { display: flex; align-items: center; gap: 8px; }
-  .mark  { color: ${({ theme }) => theme.accent}; font-size: 1.2rem; line-height: 1; }
-  .name  { font-weight: 800; font-size: 0.95rem; letter-spacing: -0.02em; }
-  .sub   { font-size: 0.6rem; color: ${({ theme }) => theme.textMuted}; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 1px; }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mark {
+    color: ${({ theme }) => theme.accent};
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  .name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: -0.02em;
+  }
+  .sub {
+    font-size: 0.6rem;
+    color: ${({ theme }) => theme.textMuted};
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
 `;
 
 const CloseBtn = styled.button`
@@ -69,7 +85,11 @@ const CloseBtn = styled.button`
   font-size: 1.3rem;
   padding: 2px;
   line-height: 1;
-  @media (max-width: 768px) { display: flex; align-items: center; justify-content: center; }
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const NavGroup = styled.nav`
@@ -101,8 +121,15 @@ const NavItem = styled(NavLink)`
   color: ${({ theme }) => theme.textSub};
   transition: all 0.15s;
 
-  .icon  { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
-  .label { flex: 1; }
+  .icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .label {
+    flex: 1;
+  }
   .count {
     font-size: 0.65rem;
     font-weight: 700;
@@ -112,12 +139,18 @@ const NavItem = styled(NavLink)`
     border-radius: 99px;
   }
 
-  &:hover { background: ${({ theme }) => theme.bgHover}; color: ${({ theme }) => theme.text}; }
+  &:hover {
+    background: ${({ theme }) => theme.bgHover};
+    color: ${({ theme }) => theme.text};
+  }
   &.active {
     background: ${({ theme }) => theme.accentLight};
     color: ${({ theme }) => theme.accent};
     font-weight: 600;
-    .count { background: ${({ theme }) => theme.accent}; color: #fff; }
+    .count {
+      background: ${({ theme }) => theme.accent};
+      color: #fff;
+    }
   }
 `;
 
@@ -139,12 +172,19 @@ const ThemeToggle = styled.button`
   border: none;
   width: 100%;
   transition: all 0.15s;
-  &:hover { background: ${({ theme }) => theme.bgHover}; color: ${({ theme }) => theme.text}; }
-  .icon { font-size: 1rem; width: 20px; text-align: center; }
+  &:hover {
+    background: ${({ theme }) => theme.bgHover};
+    color: ${({ theme }) => theme.text};
+  }
+  .icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+  }
 `;
 
 interface Props {
-  open:    boolean;
+  open: boolean;
   onClose: () => void;
 }
 
@@ -152,11 +192,17 @@ export default function Sidebar({ open, onClose }: Props) {
   const { isDark, toggleTheme } = useTheme();
   const { state } = useApp();
 
-  const activeClients  = state.clients.filter((c) => c.status !== 'Closed').length;
-  const activeProjects = state.projects.filter((p) => p.status === 'In Progress').length;
-  const pendingTasks   = state.tasks.filter((t) => t.status !== 'Done').length;
+  const activeClients = state.clients.filter(
+    (c) => c.status !== "Closed",
+  ).length;
+  const activeProjects = state.projects.filter(
+    (p) => p.status === "In Progress",
+  ).length;
+  const pendingTasks = state.tasks.filter((t) => t.status !== "Done").length;
 
-  const handleNavClick = () => { onClose(); };
+  const handleNavClick = () => {
+    onClose();
+  };
 
   return (
     <>
@@ -176,32 +222,37 @@ export default function Sidebar({ open, onClose }: Props) {
         <NavGroup>
           <NavLabel>Workspace</NavLabel>
           <NavItem to="/" end onClick={handleNavClick}>
-            <span className="icon">⊞</span><span className="label">Dashboard</span>
+            <span className="icon">⊞</span>
+            <span className="label">Dashboard</span>
           </NavItem>
 
           <NavLabel>Manage</NavLabel>
           <NavItem to="/pipeline" onClick={handleNavClick}>
-            <span className="icon">⟳</span><span className="label">Pipeline</span>
+            <span className="icon">⟳</span>
+            <span className="label">Pipeline</span>
             <span className="count">{activeClients}</span>
           </NavItem>
           <NavItem to="/clients" onClick={handleNavClick}>
-            <span className="icon">◎</span><span className="label">Clients</span>
+            <span className="icon">◎</span>
+            <span className="label">Clients</span>
             <span className="count">{state.clients.length}</span>
           </NavItem>
           <NavItem to="/projects" onClick={handleNavClick}>
-            <span className="icon">◧</span><span className="label">Projects</span>
+            <span className="icon">◧</span>
+            <span className="label">Projects</span>
             <span className="count">{activeProjects}</span>
           </NavItem>
           <NavItem to="/tasks" onClick={handleNavClick}>
-            <span className="icon">✓</span><span className="label">Tasks</span>
+            <span className="icon">✓</span>
+            <span className="label">Tasks</span>
             <span className="count">{pendingTasks}</span>
           </NavItem>
         </NavGroup>
 
         <BottomSection>
           <ThemeToggle onClick={toggleTheme}>
-            <span className="icon">{isDark ? '○' : '●'}</span>
-            {isDark ? 'Light Mode' : 'Dark Mode'}
+            <span className="icon">{isDark ? "○" : "●"}</span>
+            {isDark ? "Light Mode" : "Dark Mode"}
           </ThemeToggle>
         </BottomSection>
       </SidebarWrap>

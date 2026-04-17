@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import type { AppTheme } from './theme';
+import { createGlobalStyle } from "styled-components";
+import type { AppTheme } from "./theme";
 
 export const GlobalStyles = createGlobalStyle`
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,7 +25,6 @@ export const GlobalStyles = createGlobalStyle`
     border-radius: 99px;
   }
 
-  /* Drag ghost */
   [draggable=true] { cursor: grab; }
   [draggable=true]:active { cursor: grabbing; }
 `;

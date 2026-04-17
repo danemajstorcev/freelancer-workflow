@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 const Bar = styled.header`
   display: none;
@@ -30,7 +30,9 @@ const HamburgerBtn = styled.button`
   padding: 4px;
   border-radius: ${({ theme }) => theme.radiusSm};
   transition: background 0.15s;
-  &:hover { background: ${({ theme }) => theme.bgHover}; }
+  &:hover {
+    background: ${({ theme }) => theme.bgHover};
+  }
 `;
 
 const TopBarTitle = styled.div`
@@ -41,15 +43,17 @@ const TopBarTitle = styled.div`
   align-items: center;
   gap: 6px;
 
-  .mark { color: ${({ theme }) => theme.accent}; }
+  .mark {
+    color: ${({ theme }) => theme.accent};
+  }
 `;
 
 const PAGE_TITLES: Record<string, string> = {
-  '/':         'Dashboard',
-  '/pipeline': 'Pipeline',
-  '/clients':  'Clients',
-  '/projects': 'Projects',
-  '/tasks':    'Tasks',
+  "/": "Dashboard",
+  "/pipeline": "Pipeline",
+  "/clients": "Clients",
+  "/projects": "Projects",
+  "/tasks": "Tasks",
 };
 
 interface Props {
@@ -58,7 +62,7 @@ interface Props {
 
 export default function TopBar({ onMenuOpen }: Props) {
   const { pathname } = useLocation();
-  const title = PAGE_TITLES[pathname] ?? 'FreelanceFlow';
+  const title = PAGE_TITLES[pathname] ?? "FreelanceFlow";
 
   return (
     <Bar>
@@ -68,8 +72,7 @@ export default function TopBar({ onMenuOpen }: Props) {
       <TopBarTitle>
         <span className="mark">◆</span> {title}
       </TopBarTitle>
-      {/* Spacer to center the title */}
-      <div style={{ width: '32px' }} />
+      <div style={{ width: "32px" }} />
     </Bar>
   );
 }
