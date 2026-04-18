@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const AppShell = styled.div`
   display: flex;
@@ -32,7 +32,9 @@ export const PageTitle = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
 
-  @media (max-width: 480px) { font-size: 1.15rem; }
+  @media (max-width: 480px) {
+    font-size: 1.15rem;
+  }
 `;
 
 export const PageSub = styled.p`
@@ -46,7 +48,13 @@ export const PageInner = styled.div`
   max-width: 1200px;
   width: 100%;
 
-  @media (max-width: 1024px) { padding: 1.5rem 1.5rem; }
-  @media (max-width: 768px)  { padding: 1.25rem 1rem;  }
-  @media (max-width: 480px)  { padding: 1rem 0.875rem; }
+  @media (max-width: 1024px) {
+    padding: 1.5rem 1.5rem;
+  }
+  @media (max-width: 768px) {
+    padding: 1.25rem 1rem;
+  }
+  @media (max-width: 480px) {
+    padding: 1rem 0.875rem;
+  }
 `;
